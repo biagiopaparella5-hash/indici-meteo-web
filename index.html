@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<!-- Indici Meteo — © Biagio Paparella. Tutti i diritti riservati. -->
+<meta name="author" content="Biagio Paparella">
+<meta name="copyright" content="© Biagio Paparella">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f1420">
+<script>(function(){try{var t=localStorage.getItem("theme");t=t?JSON.parse(t):"auto";var n=t==="auto"?((window.Android&&Android.isNight)?Android.isNight():matchMedia("(prefers-color-scheme: dark)").matches):t==="dark";if(!n)document.documentElement.setAttribute("data-theme","light");}catch(e){}})();</script>
+<title>Indici Meteo</title>
+<style>
+:root{--bg:#0f1420;--card:#182030;--card2:#1f2a3d;--fg:#e9ecef;--fg2:#cfd6e4;--mut:#8f9bb3;--acc:#7aa2ff;--pos:#ff6b6b;--neg:#4dabf7;--line:#2a3550;--hdr:rgba(15,20,32,.96);--nav:#121a29;--info:#141c2b;--grid:#263049;--zero:#56627e;--accfg:#0b1020}
+:root[data-theme=light]{--bg:#f3f5f9;--card:#ffffff;--card2:#e8ecf4;--fg:#1b2333;--fg2:#33405a;--mut:#5b6780;--acc:#2f66e0;--pos:#d6336c;--neg:#1c7ed6;--line:#d6dce8;--hdr:rgba(243,245,249,.96);--nav:#ffffff;--info:#e9eefb;--grid:#e3e7ef;--zero:#9aa5bb;--accfg:#ffffff}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.4 system-ui,-apple-system,Roboto,"Segoe UI",sans-serif}
+header{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--hdr);border-bottom:1px solid var(--line)}
+header h1{font-size:17px;margin:0;flex:1;letter-spacing:.2px}
+header h1 span{color:var(--acc)}
+#refresh{background:var(--card2);color:var(--fg);border:0;border-radius:50%;width:36px;height:36px;font-size:19px}
+#status{display:none;position:fixed;top:58px;left:50%;transform:translateX(-50%);background:var(--acc);color:var(--accfg);padding:4px 12px;border-radius:14px;font-size:12px;z-index:9}
+main{padding:12px 12px 90px;max-width:900px;margin:0 auto}
+h2{font-size:18px;margin:6px 2px 12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
+.card{position:relative;text-align:left;background:var(--card);color:var(--fg);border:1px solid var(--line);border-radius:14px;padding:11px 12px 8px;font:inherit;min-height:150px;display:flex;flex-direction:column}
+.card:active{background:var(--card2)}
+.ct{font-weight:700;font-size:16px}
+.cs{color:var(--mut);font-size:12px}
+.big{font-size:26px;font-weight:700;margin:6px 0 2px;letter-spacing:-.5px}
+.l2{font-size:12.5px}
+.l3{font-size:12px;color:var(--mut)}
+.load{color:var(--mut);margin-top:12px}
+.spark{width:100%;height:34px;margin-top:auto;padding-top:6px}
+.spark path{fill:none;stroke:var(--acc);stroke-width:1.6}
+.spark .zero{stroke:var(--zero);stroke-width:1}
+.new{position:absolute;top:8px;right:8px;background:#2f9e44;color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:8px}
+.warn{font-size:11px;color:#ffa94d;margin-top:4px}
+.err{color:#ff8787;font-size:13px;padding:8px 0}
+.errt{color:#ff8787}
+.thumb{width:48%;border-radius:50%;margin-top:8px}
+.foot{color:var(--mut);font-size:12px;margin:10px 2px}
+nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:var(--nav);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom);z-index:5}
+nav button{flex:1;background:none;border:0;color:var(--mut);font:inherit;font-size:11px;padding:8px 0 9px}
+nav button b{display:block;font-size:20px;line-height:1.2;font-weight:400}
+nav button.on{color:var(--acc)}
+.dhead{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.dhead h2{margin:0}
+#updbar{position:fixed;left:10px;right:10px;bottom:74px;z-index:30;background:var(--acc);color:var(--accfg);border-radius:14px;padding:10px 12px;font-size:14px;display:flex;align-items:center;justify-content:space-between;gap:8px;box-shadow:0 4px 16px rgba(0,0,0,.35)}
+#updbar button{background:var(--accfg);color:var(--acc);border:0;border-radius:10px;padding:7px 12px;font:inherit;font-weight:700}
+.dl{display:inline-flex;align-items:center;gap:6px;margin:8px 0 2px;background:var(--card2);color:var(--fg);border:1px solid var(--line);border-radius:16px;padding:6px 12px;font:inherit;font-size:13px}
+.imgnote{font-size:12px;color:#f08c00;margin-top:4px}
+.theme3{display:flex;gap:6px}
+.theme3 button{flex:1;background:var(--card2);color:var(--fg);border:1px solid var(--line);border-radius:10px;padding:8px;font:inherit}
+.theme3 button.on{background:var(--acc);color:var(--accfg);font-weight:700}
+.back{background:var(--card2);color:var(--fg);border:0;border-radius:10px;width:38px;height:38px;font-size:24px}
+.box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px;margin:10px 0}
+.bt{font-size:13px;font-weight:600;margin-bottom:6px;color:var(--fg2)}
+.cbox{position:relative}
+.chart{width:100%;height:auto;display:block;overflow:visible}
+.chart .grid{stroke:var(--grid);stroke-width:1}
+.chart .zero{stroke:var(--zero);stroke-width:1}
+.chart .now{stroke:#ffd43b;stroke-dasharray:2 3;stroke-width:1}
+.chart .cross{stroke:var(--fg);stroke-width:.7}
+.chart .ax{fill:var(--mut);font-size:9.5px}
+[data-theme=light] .err,[data-theme=light] .errt{color:#c92a2a}
+[data-theme=light] .chart .now{stroke:#f08c00}
+.chart.mjo{max-width:380px;margin:0 auto}
+.chart.mjo .frame{fill:none;stroke:var(--zero)}
+.chart.mjo .unit{fill:var(--bg);stroke:var(--zero)}
+.chart.mjo .phase{fill:var(--fg2);font-size:15px;font-weight:700}
+.tip{display:none;font-size:12px;background:var(--card2);border-radius:8px;padding:5px 8px;margin-top:4px}
+.info{background:var(--info);border-left:3px solid var(--acc);border-radius:8px;padding:10px 12px;font-size:13.5px;margin:12px 0;color:var(--fg2)}
+.src{font-size:12px;color:var(--mut)}
+.src ul{padding-left:18px;margin:4px 0}
+a{color:var(--acc)}
+.kv,.tbl{width:100%;border-collapse:collapse;font-size:13.5px}
+.kv td{padding:5px 2px;border-bottom:1px solid var(--line)}
+.kv td:last-child{text-align:right}
+.tbl th,.tbl td{padding:5px 4px;border-bottom:1px solid var(--line);text-align:right}
+.tbl th:first-child,.tbl td:first-child{text-align:left}
+.tbl th{color:var(--mut);font-weight:500;font-size:12px}
+.ita td{white-space:nowrap}
+.chip{display:inline-block;min-width:38px;text-align:center;border-radius:6px;padding:1px 4px;color:#fff;font-size:12px}
+.links{display:flex;flex-direction:column;gap:8px}
+.lnk{display:block;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;text-decoration:none}
+.sun{width:100%;max-width:512px;display:block;margin:0 auto;border-radius:8px;background:#fff}
+.zimg{background:#000}
+.thumbw{width:100%;margin-top:8px;border-radius:6px}
+.seg{display:flex;gap:6px;margin:4px 0 6px}
+.seg button{flex:1;background:var(--card2);color:var(--fg);border:1px solid var(--line);border-radius:10px;padding:7px;font:inherit}
+.seg button.on{background:var(--acc);color:var(--accfg);font-weight:700}
+.zimg.zoom,.mjoimg.zoom{position:fixed;inset:0;max-width:none;width:100vw;height:100vh;object-fit:contain;z-index:20;border-radius:0}
+.locbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.pill{background:var(--card2);color:var(--fg);border:1px solid var(--line);border-radius:18px;padding:7px 12px;font:inherit;font-size:13.5px}
+select,input{background:var(--card2);color:var(--fg);border:1px solid var(--line);border-radius:10px;padding:7px 9px;font:inherit;font-size:13.5px}
+#locpanel{margin-top:8px}
+.row{display:flex;gap:8px;align-items:center;margin:6px 0}
+.row input{flex:1}
+.resitem{display:block;width:100%;text-align:left;background:var(--card);color:var(--fg);border:1px solid var(--line);border-radius:10px;padding:9px;margin:4px 0;font:inherit}
+.resitem small{color:var(--mut)}
+.hidden{display:none}
+.days{display:flex;gap:6px;overflow-x:auto;margin:12px 0 4px;padding-bottom:4px}
+.day{min-width:84px;background:var(--card);border:1px solid;border-radius:12px;padding:6px;font-size:12px;text-align:center}
+.dn{font-weight:700;margin-bottom:3px}
+.dr{border-radius:6px;color:#fff;font-size:11px;padding:1px 2px;margin-bottom:3px}
+.dv{color:var(--fg2)}
+.sw{display:flex;gap:10px;align-items:center;padding:7px 0;font-size:14px}
+.sw input{width:20px;height:20px}
+.dim{opacity:.4;pointer-events:none}
+</style>
+</head>
+<body>
+<header><h1>Indici <span>Meteo</span></h1><button id="refresh" title="Aggiorna">⟳</button></header>
+<div id="status"></div>
+<main id="app"></main>
+<nav>
+  <button data-tab="tele"><b>🌐</b>Teleconnessioni</button>
+  <button data-tab="conv"><b>⛈️</b>Instabilità</button>
+  <button data-tab="sun"><b>☀️</b>Sole</button>
+  <button data-tab="set"><b>⚙️</b>Impostazioni</button>
+</nav>
+<script src="js/data.js"></script>
+<script src="js/meteo.js"></script>
+<script src="js/chart.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

@@ -1,1 +1,5 @@
-Indici Meteo - Copyright (c) Biagio Paparella. Tutti i diritti riservati.
+Indici Meteo
+Copyright (c) Biagio Paparella. Tutti i diritti riservati.
+
+Il codice, la grafica e i contenuti di questa app sono opera di Biagio Paparella.
+Non è consentito copiarli, modificarli o distribuirli senza autorizzazione scritta dell'autore.
