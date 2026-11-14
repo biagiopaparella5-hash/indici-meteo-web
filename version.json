@@ -1,11 +1,1 @@
-{
- "version": 10,
- "minApp": 9,
- "files": [
-  "index.html",
-  "js/app.js",
-  "js/data.js",
-  "js/meteo.js",
-  "js/chart.js"
- ]
-}
+{"version":11,"minApp":9,"files":["index.html","js/app.js","js/data.js","js/meteo.js","js/chart.js"]}
